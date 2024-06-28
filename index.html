@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Demo</title>
+        <script async src="./es-module-shims.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                user-select: none;
+            }
+
+            button {
+                outline: none;
+                border: none;
+            }
+
+            img {
+                display: block;
+            }
+
+            #root {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                overflow: hidden;
+                display: none;
+            }
+
+            #container {
+                height: 100%;
+            }
+
+            #staff-list .staff-item {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 150px;
+                padding: 10px;
+                background: linear-gradient(180deg, #ffffff 0%, #e7eff8 100%);
+                filter: drop-shadow(0px 10px 7px rgba(17, 24, 55, 0.21));
+                border-radius: 15px;
+                letter-spacing: 3px;
+                pointer-events: none;
+                transform-origin: left bottom;
+                animation: show 0.3s ease;
+            }
+
+            #staff-list .staff-item .title {
+                color: #09b1f8;
+            }
+
+            #staff-list .staff-item .content {
+                margin-top: 10px;
+                color: #333;
+            }
+
+            @keyframes show {
+                from {
+                    opacity: 0;
+                    transform: scale(0.5, 0.5);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1, 1);
+                }
+            }
+
+            #btn-list-left {
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: flex;
+                flex-direction: row;
+            }
+
+            #btn-list-right {
+                position: absolute;
+                right: 0;
+                top: 0;
+                display: flex;
+                flex-direction: row;
+            }
+
+            .btn-item {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: center center #4a54ff;
+                background-image: linear-gradient(315deg, #6772ff 0, #00f9e5 100%);
+                box-shadow: 0 1px 5px #0003, 0 2px 2px #00000024,
+                0 3px 1px -2px #0000001f;
+            }
+
+            #btn-list-left .btn-item {
+                margin: 20px 0 0 20px;
+            }
+
+            #btn-list-right .btn-item {
+                margin: 20px 20px 0 0;
+            }
+
+            .btn-item img {
+                width: 50%;
+                pointer-events: none;
+            }
+
+            #loading {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #loading .loading-img {
+                width: 128px;
+                animation: loading 1.5s linear infinite;
+            }
+
+            @keyframes loading {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @media screen and (orientation: portrait) {
+                #btn-list-left,
+                #btn-list-right {
+                    flex-direction: column;
+                }
+            }
+
+            @media screen and (max-width: 1680px) {
+            }
+
+            @media screen and (max-width: 1280px) {
+            }
+
+            @media screen and (max-width: 1024px) {
+            }
+
+            @media screen and (max-width: 767px) {
+                .btn-item {
+                    width: 35px;
+                    height: 35px;
+                }
+
+                #btn-list-left .btn-item {
+                    margin: 14px 0 0 14px;
+                }
+
+                #btn-list-right .btn-item {
+                    margin: 14px 14px 0 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 主界面 -->
+        <div id="root">
+            <!-- canvas标签的父容器 -->
+            <div id="container"></div>
+
+            <!-- 弹窗信息层 -->
+            <div id="staff-list">
+                <div class="staff-item">
+                    <div class="title"></div>
+                    <div class="content"></div>
+                </div>
+            </div>
+
+            <!-- 按钮层 -->
+            <div id="btn-list-left">
+                <button class="btn-item" title="重置" id="reset">
+                    <img src="./static/images/reset.png" />
+                </button>
+            </div>
+
+            <div id="btn-list-right">
+                <button class="btn-item" title="前臺" data-name="Front">
+                    <img src="./static/images/front.png" />
+                </button>
+                <button class="btn-item" title="銷售部" data-name="Marketing">
+                    <img src="./static/images/marketing.png" />
+                </button>
+                <button class="btn-item" title="會議室" data-name="Meeting">
+                    <img src="./static/images/meeting.png" />
+                </button>
+                <button class="btn-item" title="開發部" data-name="Development">
+                    <img src="./static/images/development.png" />
+                </button>
+                <button class="btn-item" title="接待室" data-name="Reception">
+                    <img src="./static/images/reception.png" />
+                </button>
+                <button class="btn-item" title="食堂" data-name="Canteen">
+                    <img src="./static/images/canteen.png" />
+                </button>
+            </div>
+        </div>
+
+        <!-- 加载中界面 -->
+        <div id="loading">
+            <img class="loading-img" src="./static/images/Loading.png" alt="">
+        </div>
+
+        <!--  @formatter:off  -->
+        <script type="importmap">
+    {
+      "imports": {
+        "three": "./three/build/three.module.js"
+      }
+    }
+
+
+
+
+        </script>
+        <!--  @formatter:on  -->
+
+        <script type="module">
+            import * as THREE from 'three';
+            import { OrbitControls } from './three/examples/jsm/controls/OrbitControls.js';
+            import { GLTFLoader } from './three/examples/jsm/loaders/GLTFLoader.js';
+            import { DRACOLoader } from './three/examples/jsm/loaders/DRACOLoader.js';
+            import { TWEEN } from './three/examples/jsm/libs/tween.module.min.js';
+
+            // 所有职员数据
+            const allStaffData = [
+                {
+                    name: 'floor_2215',
+                    label: '產品經理',
+                    content:
+                        '主要是負責對產品進行規劃和管理，保證高質量的產品按時完成和發佈。',
+                    path: './static/images/man.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2119',
+                    label: '銷售',
+                    content:
+                        '負責熟悉公司產品，定期拜訪客戶，完成部門規定的銷售目標，爲客戶提供滿意的服務。',
+                    path: './static/images/man.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2022',
+                    label: '銷售',
+                    content:
+                        '負責熟悉公司產品，定期拜訪客戶，完成部門規定的銷售目標，爲客戶提供滿意的服務。',
+                    path: './static/images/women.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2252',
+                    label: '程序員',
+                    content:
+                        '負責軟件項目的詳細設計、編碼和內部測試，參與軟件開發和維護過程中重大技術問題的解決。',
+                    path: './static/images/women.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2249',
+                    label: '程序員',
+                    content:
+                        '負責軟件項目的詳細設計、編碼和內部測試，參與軟件開發和維護過程中重大技術問題的解決。',
+                    path: './static/images/man.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2292',
+                    label: '程序員',
+                    content:
+                        '負責軟件項目的詳細設計、編碼和內部測試，參與軟件開發和維護過程中重大技術問題的解決。',
+                    path: './static/images/man.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2024',
+                    label: '前臺',
+                    content: '負責接待來訪客人，以及會議室環境的日常維護工作。',
+                    path: './static/images/women.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2040',
+                    label: '老闆',
+                    content: '實施公司的總體戰略，發掘市場機會，領導創新與變革。',
+                    path: './static/images/man.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2041',
+                    label: '客戶',
+                    content: '諮詢公司業務。',
+                    path: './static/images/women.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2310',
+                    label: '職員',
+                    content: '負責公司的日常維護工作。',
+                    path: './static/images/women.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+                {
+                    name: 'floor_2259',
+                    label: '職員',
+                    content: '負責公司的日常維護工作。',
+                    path: './static/images/man.png',
+                    domElement: null,
+                    spriteObj: null,
+                },
+            ];
+
+            // 所有房间数据
+            const allRoomData = [
+                {
+                    name: 'Front',
+                    position: { x: -5.38, y: 3.03, z: 4.77 },
+                    target: { x: -5.35, y: 0, z: -8.41 },
+                },
+                {
+                    name: 'Marketing',
+                    position: { x: -6.29, y: 1.91, z: 17.77 },
+                    target: { x: -6.23, y: 0, z: -7.66 },
+                },
+                {
+                    name: 'Meeting',
+                    position: { x: 12.51, y: 2.57, z: 16.6 },
+                    target: { x: 0.72, y: 0, z: 4.95 },
+                },
+                {
+                    name: 'Development',
+                    position: { x: 13.82, y: 2.16, z: 0.34 },
+                    target: { x: -3.64, y: 0, z: 1.29 },
+                },
+                {
+                    name: 'Reception',
+                    position: { x: 9.83, y: 2.83, z: -4.2 },
+                    target: { x: 3.88, y: 0, z: -16.88 },
+                },
+                {
+                    name: 'Canteen',
+                    position: { x: -1.23, y: 2.21, z: -6.09 },
+                    target: { x: -8.49, y: 0, z: -17.96 },
+                },
+            ];
+
+            // 获取/生成dom元素
+            const rootElement = document.getElementById('root');
+            const containerElement = document.getElementById('container');
+
+            // 加载中相关元素
+            const loadingElement = document.getElementById('loading');
+
+            // 弹窗相关元素
+            const staffListElement = document.getElementById('staff-list');
+            for (let i = 0; i < allStaffData.length; i++) {
+                const staffItemElement =
+                    staffListElement.getElementsByClassName('staff-item')[0];
+                if (i === 0) {
+                    allStaffData[i].domElement = staffItemElement;
+                } else {
+                    const copyElement = staffItemElement.cloneNode(true);
+                    staffListElement.appendChild(copyElement);
+                    allStaffData[i].domElement = copyElement;
+                }
+
+                const titleElEment =
+                    allStaffData[i].domElement.getElementsByClassName('title')[0];
+                const contentElement =
+                    allStaffData[i].domElement.getElementsByClassName('content')[0];
+
+                titleElEment.innerText = allStaffData[i].label;
+                contentElement.innerText = allStaffData[i].content;
+            }
+
+            // 按钮相关元素
+            const btnListElement = document.getElementById('btn-list-right');
+            const btnElements = btnListElement.getElementsByClassName('btn-item');
+            const resetElement = document.getElementById('reset');
+
+            // 场景初始化
+            const scene = new THREE.Scene();
+
+            // scene.add(new THREE.AxesHelper(50));
+
+            const cubeTextureLoader = new THREE.CubeTextureLoader();
+            const skyBoxTexture = cubeTextureLoader.load([
+                './static/images/sky/posx.png',
+                './static/images/sky/negx.png',
+                './static/images/sky/posy.png',
+                './static/images/sky/negy.png',
+                './static/images/sky/posz.png',
+                './static/images/sky/negz.png',
+            ]);
+            scene.background = skyBoxTexture;
+
+            const renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true,
+            });
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            containerElement.appendChild(renderer.domElement);
+
+            const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 1000);
+            const cameraResetPostion = new THREE.Vector3(25.68, 15.38, 0.025);
+            camera.position.copy(cameraResetPostion);
+
+            const controls = new OrbitControls(camera, renderer.domElement);
+            const controlsResetPostion = new THREE.Vector3(0, 0, 0);
+            controls.target.copy(controlsResetPostion);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.1;
+            controls.minDistance = 3;
+            controls.maxDistance = 50;
+            controls.maxPolarAngle = 0.5 * Math.PI;
+            controls.screenSpacePanning = false;
+            controls.autoRotateSpeed = 1.0;
+
+            const directionalLight = new THREE.DirectionalLight(0xfefefe, 0.5);
+            directionalLight.position.set(8, 20, 7);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.bias = -0.0005;
+            directionalLight.shadow.mapSize = new THREE.Vector2(2048, 2048);
+            directionalLight.shadow.camera.left = -20;
+            directionalLight.shadow.camera.right = 20;
+            directionalLight.shadow.camera.top = 20;
+            directionalLight.shadow.camera.bottom = -20;
+            scene.add(directionalLight);
+
+            const ambientLight = new THREE.AmbientLight(0x545f64, 2);
+            scene.add(ambientLight);
+
+            // 所有资源加载完成的回调
+            let isLoading = true;
+            THREE.DefaultLoadingManager.onLoad = () => {
+                isLoading = false;
+                loadingElement.style.display = 'none';
+                rootElement.style.display = 'block';
+                controls.autoRotate = true;
+            };
+
+            // 加载3D模型
+            const gltfLoader = new GLTFLoader();
+            const dracoLoader = new DRACOLoader();
+            dracoLoader.setDecoderPath('./three/examples/jsm/libs/draco/gltf/');
+            gltfLoader.setDRACOLoader(dracoLoader);
+
+            let root = null;
+            gltfLoader.load(
+                './static/model/office.glb',
+                (obj) => {
+                    root = obj.scene;
+                    root.traverse((child) => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                        }
+                    });
+                    scene.add(root);
+                    // console.log(root);
+
+                    // 加载头像图片
+                    const loader = new THREE.TextureLoader();
+                    root.traverse((obj) => {
+                        const staffData = allStaffData.find(
+                            (item) => item.name === obj.name,
+                        );
+
+                        if (!staffData) return;
+
+                        const spriteMaterial = new THREE.SpriteMaterial({
+                            map: loader.load(staffData.path),
+                        });
+
+                        const sprite = new THREE.Sprite(spriteMaterial);
+                        staffData.spriteObj = sprite;
+                        root.add(staffData.spriteObj);
+
+                        const pos = obj.position.clone();
+                        staffData.spriteObj.position.set(pos.x, pos.y + 1.3, pos.z);
+                        staffData.spriteObj.scale.set(1, 1, 1);
+                    });
+                },
+            );
+
+            // 物体坐标转CSS坐标
+            const getCssPositionByObj = (obj) => {
+                const tempV = new THREE.Vector3();
+
+                // 获取模型中心位置
+                obj.updateWorldMatrix(true, false);
+                obj.getWorldPosition(tempV);
+
+                // 获取标准化屏幕坐标，X和Y都会在-1和1区间
+                tempV.project(camera);
+
+                // 将标准屏幕坐标转化为CSS坐标
+                const x = (tempV.x * 0.5 + 0.5) * containerElement.clientWidth;
+                const y = (tempV.y * -0.5 + 0.5) * containerElement.clientHeight;
+
+                return new THREE.Vector2(x, y);
+            };
+
+            // 屏幕适配
+            const resize = () => {
+                if (!renderer || !camera) return;
+
+                const canvas = renderer.domElement;
+
+                const pixelRatio = window.devicePixelRatio;
+
+                const parentWidth = containerElement.clientWidth;
+                const parentHeight = containerElement.clientHeight;
+
+                const canvasWidth = (parentWidth * pixelRatio) | 0;
+                const canvasHeight = (parentHeight * pixelRatio) | 0;
+
+                const needResize =
+                    canvas.width !== canvasWidth || canvas.height !== canvasHeight;
+
+                if (needResize) {
+                    canvas.style.width = parentWidth + 'px';
+                    canvas.style.height = parentHeight + 'px';
+                    renderer.setSize(canvasWidth, canvasHeight, false);
+
+                    camera.aspect = canvasWidth / canvasHeight;
+                    camera.updateProjectionMatrix();
+                }
+            };
+
+            // 获取鼠标移动坐标
+            const pointer = new THREE.Vector2(-100000, -100000);
+            const setPickPosition = (event) => {
+                const rect = containerElement.getBoundingClientRect();
+                pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+            };
+
+            // 清除鼠标移动坐标
+            const clearPickPosition = () => {
+                pointer.x = -100000;
+                pointer.y = -100000;
+            };
+
+            // 鼠标移动拾取模型
+            const raycaster = new THREE.Raycaster();
+            const pick = () => {
+                raycaster.setFromCamera(pointer, camera);
+
+                const intersects = raycaster.intersectObjects(scene.children);
+
+                if (intersects.length > 0) {
+                    // containerElement.style.cursor = 'pointer';
+                    const firstObj = intersects[0].object;
+                    const staffData = allStaffData.find(
+                        (item) => item.spriteObj === firstObj,
+                    );
+                    setShowStaffData(staffData);
+                } else {
+                    // containerElement.style.cursor = 'auto';
+                    setShowStaffData(null);
+                }
+
+                if (hasClick) {
+                    if (intersects.length > 0) {
+                        // console.log(intersects[0]);
+                    }
+                    hasClick = false;
+                }
+            };
+
+            // 弹窗显示
+            const setShowStaffData = (staffData) => {
+                if (!staffData) {
+                    allStaffData.forEach((item) => {
+                        item.domElement.style.display = 'none';
+                    });
+                } else {
+                    allStaffData.forEach((item) => {
+                        if (item === staffData) {
+                            if (item.domElement.style.display !== 'block') {
+                                const pos = getCssPositionByObj(item.spriteObj);
+                                item.domElement.style.display = 'block';
+                                const height = item.domElement.clientHeight;
+                                item.domElement.style.left = pos.x + 'px';
+                                item.domElement.style.top = pos.y - height + 'px';
+                            }
+                        } else {
+                            item.domElement.style.display = 'none';
+                        }
+                    });
+                }
+            };
+
+            // 点击事件
+            let hasClick = false;
+            const rootClickHandler = (e) => {
+                const btnElementsArr = Array.from(btnElements);
+
+                // 顶层点击事件
+                if (controls && controls.autoRotate) {
+                    controls.autoRotate = false;
+                }
+
+                // 其他层点击事件
+                if (e.target === containerElement) {
+                    hasClick = true;
+                } else if (btnElementsArr.indexOf(e.target) !== -1) {
+                    const dataName = e.target.dataset.name;
+                    const roomData = allRoomData.find((item) => item.name === dataName);
+
+                    if (roomData) {
+                        new TWEEN.Tween(camera.position).to(roomData.position, 600).start();
+                        new TWEEN.Tween(controls.target).to(roomData.target, 600).start();
+                    }
+                } else if (e.target === resetElement) {
+                    new TWEEN.Tween(camera.position).to(cameraResetPostion, 600).start();
+                    new TWEEN.Tween(controls.target)
+                        .to(controlsResetPostion, 600)
+                        .start();
+                    controls.autoRotate = true;
+                }
+            };
+
+            // 绑定事件
+            window.addEventListener('mousemove', setPickPosition);
+            window.addEventListener('mouseout', clearPickPosition);
+            window.addEventListener('mouseleave', clearPickPosition);
+            rootElement.addEventListener('click', rootClickHandler);
+
+            // 重渲染函数
+            const animate = (time) => {
+                requestAnimationFrame(animate);
+
+                resize();
+
+                pick();
+
+                TWEEN.update();
+
+                renderer.render(scene, camera);
+
+                controls.update();
+            };
+
+            animate();
+        </script>
+    </body>
+</html>
